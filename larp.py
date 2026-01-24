@@ -1,7 +1,6 @@
 #pip install requests
 #pip install dhooks
 #pip install datetime
-#pip install for it to work boii
 
 import requests
 import json
